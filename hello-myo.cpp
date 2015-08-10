@@ -222,5 +222,4 @@ int main(int argc, char** argv)
         std::cin.ignore();
         return 1;
     }
-    xjw sb;
 }
