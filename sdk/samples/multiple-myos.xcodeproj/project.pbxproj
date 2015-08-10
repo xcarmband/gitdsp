@@ -7,131 +7,134 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F8E852CC1B79378D007ABF99 /* myo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E852CB1B79378D007ABF99 /* myo.framework */; };
-		F8E852CD1B7937B4007ABF99 /* myo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F8E852CB1B79378D007ABF99 /* myo.framework */; };
-		F8E852CF1B793877007ABF99 /* hello-myo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8E852CE1B793877007ABF99 /* hello-myo.cpp */; };
+		4D638773192671F1005BE0A6 /* multiple-myos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D638772192671F1005BE0A6 /* multiple-myos.cpp */; };
+		4D6387761926720D005BE0A6 /* myo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6387751926720D005BE0A6 /* myo.framework */; };
+		4D63877719267218005BE0A6 /* myo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D6387751926720D005BE0A6 /* myo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		F8E852BF1B79373B007ABF99 /* CopyFiles */ = {
+		4D638764192671C8005BE0A6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				F8E852CD1B7937B4007ABF99 /* myo.framework in CopyFiles */,
+				4D63877719267218005BE0A6 /* myo.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F8E852C11B79373B007ABF99 /* gitdsp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitdsp; sourceTree = BUILT_PRODUCTS_DIR; };
-		F8E852CB1B79378D007ABF99 /* myo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = myo.framework; path = sdk/myo.framework; sourceTree = "<group>"; };
-		F8E852CE1B793877007ABF99 /* hello-myo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hello-myo.cpp"; sourceTree = SOURCE_ROOT; };
+		4D638766192671C8005BE0A6 /* multiple-myos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "multiple-myos"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D638772192671F1005BE0A6 /* multiple-myos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "multiple-myos.cpp"; sourceTree = SOURCE_ROOT; };
+		4D6387751926720D005BE0A6 /* myo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = myo.framework; path = ../myo.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		F8E852BE1B79373B007ABF99 /* Frameworks */ = {
+		4D638763192671C8005BE0A6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8E852CC1B79378D007ABF99 /* myo.framework in Frameworks */,
+				4D6387761926720D005BE0A6 /* myo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F8E852B81B79373B007ABF99 = {
+		4D63875D192671C8005BE0A6 = {
 			isa = PBXGroup;
 			children = (
-				F8E852CB1B79378D007ABF99 /* myo.framework */,
-				F8E852C31B79373B007ABF99 /* gitdsp */,
-				F8E852C21B79373B007ABF99 /* Products */,
+				4D638768192671C8005BE0A6 /* multiple-myos */,
+				4D638774192671F5005BE0A6 /* Frameworks */,
+				4D638767192671C8005BE0A6 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		F8E852C21B79373B007ABF99 /* Products */ = {
+		4D638767192671C8005BE0A6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F8E852C11B79373B007ABF99 /* gitdsp */,
+				4D638766192671C8005BE0A6 /* multiple-myos */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F8E852C31B79373B007ABF99 /* gitdsp */ = {
+		4D638768192671C8005BE0A6 /* multiple-myos */ = {
 			isa = PBXGroup;
 			children = (
-				F8E852CE1B793877007ABF99 /* hello-myo.cpp */,
+				4D638772192671F1005BE0A6 /* multiple-myos.cpp */,
 			);
-			path = gitdsp;
+			path = "multiple-myos";
+			sourceTree = "<group>";
+		};
+		4D638774192671F5005BE0A6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4D6387751926720D005BE0A6 /* myo.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F8E852C01B79373B007ABF99 /* gitdsp */ = {
+		4D638765192671C8005BE0A6 /* multiple-myos */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F8E852C81B79373B007ABF99 /* Build configuration list for PBXNativeTarget "gitdsp" */;
+			buildConfigurationList = 4D63876F192671C8005BE0A6 /* Build configuration list for PBXNativeTarget "multiple-myos" */;
 			buildPhases = (
-				F8E852BD1B79373B007ABF99 /* Sources */,
-				F8E852BE1B79373B007ABF99 /* Frameworks */,
-				F8E852BF1B79373B007ABF99 /* CopyFiles */,
+				4D638762192671C8005BE0A6 /* Sources */,
+				4D638763192671C8005BE0A6 /* Frameworks */,
+				4D638764192671C8005BE0A6 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = gitdsp;
-			productName = gitdsp;
-			productReference = F8E852C11B79373B007ABF99 /* gitdsp */;
+			name = "multiple-myos";
+			productName = "multiple-myos";
+			productReference = 4D638766192671C8005BE0A6 /* multiple-myos */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		F8E852B91B79373B007ABF99 /* Project object */ = {
+		4D63875E192671C8005BE0A6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
-				ORGANIZATIONNAME = XJTC;
-				TargetAttributes = {
-					F8E852C01B79373B007ABF99 = {
-						CreatedOnToolsVersion = 6.3.2;
-					};
-				};
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Thalmic Labs";
 			};
-			buildConfigurationList = F8E852BC1B79373B007ABF99 /* Build configuration list for PBXProject "gitdsp" */;
+			buildConfigurationList = 4D638761192671C8005BE0A6 /* Build configuration list for PBXProject "multiple-myos" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = F8E852B81B79373B007ABF99;
-			productRefGroup = F8E852C21B79373B007ABF99 /* Products */;
+			mainGroup = 4D63875D192671C8005BE0A6;
+			productRefGroup = 4D638767192671C8005BE0A6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F8E852C01B79373B007ABF99 /* gitdsp */,
+				4D638765192671C8005BE0A6 /* multiple-myos */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		F8E852BD1B79373B007ABF99 /* Sources */ = {
+		4D638762192671C8005BE0A6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8E852CF1B793877007ABF99 /* hello-myo.cpp in Sources */,
+				4D638773192671F1005BE0A6 /* multiple-myos.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		F8E852C61B79373B007ABF99 /* Debug */ = {
+		4D63876D192671C8005BE0A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -146,14 +149,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -166,14 +166,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
-		F8E852C71B79373B007ABF99 /* Release */ = {
+		4D63876E192671C8005BE0A6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -188,44 +187,41 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 			};
 			name = Release;
 		};
-		F8E852C91B79373B007ABF99 /* Debug */ = {
+		4D638770192671C8005BE0A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/sdk",
+					$SOURCE_ROOT/../,
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		F8E852CA1B79373B007ABF99 /* Release */ = {
+		4D638771192671C8005BE0A6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/sdk",
+					$SOURCE_ROOT/../,
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -235,24 +231,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F8E852BC1B79373B007ABF99 /* Build configuration list for PBXProject "gitdsp" */ = {
+		4D638761192671C8005BE0A6 /* Build configuration list for PBXProject "multiple-myos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F8E852C61B79373B007ABF99 /* Debug */,
-				F8E852C71B79373B007ABF99 /* Release */,
+				4D63876D192671C8005BE0A6 /* Debug */,
+				4D63876E192671C8005BE0A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F8E852C81B79373B007ABF99 /* Build configuration list for PBXNativeTarget "gitdsp" */ = {
+		4D63876F192671C8005BE0A6 /* Build configuration list for PBXNativeTarget "multiple-myos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F8E852C91B79373B007ABF99 /* Debug */,
-				F8E852CA1B79373B007ABF99 /* Release */,
+				4D638770192671C8005BE0A6 /* Debug */,
+				4D638771192671C8005BE0A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = F8E852B91B79373B007ABF99 /* Project object */;
+	rootObject = 4D63875E192671C8005BE0A6 /* Project object */;
 }
