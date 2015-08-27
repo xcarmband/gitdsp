@@ -7,17 +7,27 @@
 #include <stdexcept>
 #include <string>
 #include <algorithm>
+#include <vector>
+#include <queue>
 
+#include <stdio.h>
+#include <fstream>
+#include <ctime>
+#include <sys/time.h>
 // The only file that needs to be included to use the Myo C++ SDK is myo.hpp.
 #include <myo/myo.hpp>
+#include "quaternion/quaternion.c++"
+
+using namespace std;
+
 
 // Classes that inherit from myo::DeviceListener can be used to receive events from Myo devices. DeviceListener
 // provides several virtual functions for handling different kinds of events. If you do not override an event, the
 // default behavior is to do nothing.
 class DataCollector : public myo::DeviceListener {
 public:
-    DataCollector()
-    : onArm(false), isUnlocked(false), roll_w(0), pitch_w(0), yaw_w(0), currentPose(), _accel(), _gyro()
+    DataCollector(float sampling_period)
+    : onArm(false), isUnlocked(false), roll_w(0), pitch_w(0), yaw_w(0), currentPose(), _accel(), _gyro(),_a_pred()
     {
     }
     
@@ -54,7 +64,8 @@ public:
         roll_w = static_cast<int>((roll + (float)M_PI)/(M_PI * 2.0f) * 18);
         pitch_w = static_cast<int>((pitch + (float)M_PI/2.0f)/M_PI * 18);
         yaw_w = static_cast<int>((yaw + (float)M_PI)/(M_PI * 2.0f) * 18);
-        _quat = quat;
+        _quat = Quaternion<float>(quat.w(), quat.x(), quat.y(), quat.z());
+        
         
     }
     
@@ -142,7 +153,88 @@ public:
         std::cout << std::flush;
     }
     
-    void kalmanfilter(){
+    void gravity_compensate(){
+        float v[3];
+        v[0] = _accel.x();
+        v[1] = _accel.y();
+        v[2] = _accel.z();
+        _quat.QuatRotation(v);
+        accel_pure = myo::Vector3<float>(v[0],v[1],v[2]-1);
+    }
+    
+    void kalmanfilter_position(float alpha, float gamma){
+        //update raw velocity
+        posit_raw = myo::Vector3<float>(posit_filter.x() + veloc_filter.x(), posit_filter.y() + veloc_filter.y(), posit_filter.z()+ veloc_filter.z());
+        
+        
+        //Predict next status
+        _pos_pred = myo::Vector3<float>(0,0,0);
+        // _v_pred =veloc_filter;
+        
+        //Predict the covariance matrix
+        _posp_pred = myo::Vector3<float>(_posp.x() + alpha, _posp.y() + alpha, _posp.z() + alpha);
+        
+        //refresh the k
+        k = myo::Vector3<float>(_posp_pred.x()/(_posp_pred.x()+gamma), _posp_pred.y()/(_posp_pred.y()+gamma),_posp_pred.z()/(_posp_pred.z()+gamma));
+        
+        //adjust
+        myo::Vector3<float> tmp(posit_raw.x()-_pos_pred.x(),posit_raw.y() - _pos_pred.y(), posit_raw.z() - _pos_pred.z());
+        posit_filter = myo::Vector3<float>(_pos_pred.x() + k.x()*tmp.x(),_pos_pred.y()+k.y()*tmp.y(),_pos_pred.z() + k.z()*tmp.z());
+        
+        //adjust the covariance matrix
+        _posp = myo::Vector3<float>((1-gamma)*_posp_pred.x(), (1-gamma)*_posp_pred.y(),(1-gamma)*_posp_pred.z());
+        
+        
+    }
+    
+    void kalmanfilter_velocity(float alpha, float gamma){
+        //update raw velocity
+        //        veloc_raw = myo::Vector3<float>(veloc_raw.x() + accel_filter.x(), veloc_raw.y() + accel_filter.y(), veloc_raw.z()+ accel_filter.z());
+        //        veloc_raw = myo::Vector3<float>(veloc_raw.x() + accel_pure.x(), veloc_raw.y() + accel_pure.y(), veloc_raw.z()+ accel_pure.z());
+        veloc_raw = myo::Vector3<float>(veloc_filter.x() + accel_pure.x(), veloc_filter.y() + accel_pure.y(), veloc_filter.z()+ accel_pure.z());
+        
+        
+        //Predict next status
+        _v_pred = myo::Vector3<float>(0,0,0);
+        // _v_pred =veloc_filter;
+        
+        //Predict the covariance matrix
+        _vp_pred = myo::Vector3<float>(_vp.x() + alpha, _vp.y() + alpha, _vp.z() + alpha);
+        
+        //refresh the k
+        k = myo::Vector3<float>(_vp_pred.x()/(_vp_pred.x()+gamma), _vp_pred.y()/(_vp_pred.y()+gamma),_vp_pred.z()/(_vp_pred.z()+gamma));
+        
+        //adjust
+        myo::Vector3<float> tmp(veloc_raw.x()-_v_pred.x(),veloc_raw.y() - _v_pred.y(), veloc_raw.z() - _v_pred.z());
+        veloc_filter = myo::Vector3<float>(_v_pred.x() + k.x()*tmp.x(),_v_pred.y()+k.y()*tmp.y(),_v_pred.z() + k.z()*tmp.z());
+        
+        //adjust the covariance matrix
+        _vp = myo::Vector3<float>((1-gamma)*_vp_pred.x(), (1-gamma)*_vp_pred.y(),(1-gamma)*_vp_pred.z());
+        
+        
+    }
+    
+    
+    void kalmanfilter(float alpha, float gamma){
+        //compensate gravity;
+        gravity_compensate();
+        
+        //Predict next status
+        _a_pred = accel_filter;
+        
+        //Predict the covariance matrix
+        _p_pred = myo::Vector3<float>(_p.x() + alpha, _p.y() + alpha, _p.z() + alpha);
+        
+        //refresh the k
+        k = myo::Vector3<float>(_p_pred.x()/(_p_pred.x()+gamma), _p_pred.y()/(_p_pred.y()+gamma),_p_pred.z()/(_p_pred.z()+gamma));
+        
+        //adjust
+        myo::Vector3<float> tmp(accel_pure.x()-_a_pred.x(),accel_pure.y() - _a_pred.y(), accel_pure.z() - _a_pred.z());
+        accel_filter = myo::Vector3<float>(_a_pred.x() + k.x()*tmp.x(),_a_pred.y()+k.y()*tmp.y(),_a_pred.z() + k.z()*tmp.z());
+        
+        //adjust the covariance matrix
+        _p = myo::Vector3<float>((1-gamma)*_p_pred.x(), (1-gamma)*_p_pred.y(),(1-gamma)*_p_pred.z());
+        
         
     }
     
@@ -166,12 +258,53 @@ public:
     int roll_w, pitch_w, yaw_w;
     myo::Vector3<float> _accel;
     myo::Vector3<float> _gyro;
-    myo::Quaternion<float>  _quat;
+    // type myo::quaternion turned into quaterion locally defined
+    Quaternion<float>  _quat;
     myo::Pose currentPose;
-    myo::Vector3<float>  accel_filter;
-    myo::Vector3<float>  gyros_filter;
+    myo::Vector3<float>     accel_pure;
+    myo::Vector3<float>     accel_filter;
+    myo::Vector3<float>     veloc_raw;
+    myo::Vector3<float>     veloc_filter;
+    myo::Vector3<float>     posit_raw;
+    myo::Vector3<float>     posit_filter;
     
+    myo::Vector3<float>     accel_pred;
+    myo::Vector3<float>     veloc_pred;
+    myo::Vector3<float>     posit_pred;
+    
+    void    matrix_print(std::vector<std::vector<float>> in){
+        for(int i = 0 ; i < in.size(); i++){
+            for(int j = 0 ; j < in[i].size(); j++){
+                std::cout<<in[i][j];
+            }
+            std::cout << std::endl;
+        }
+    }
+    
+    std::vector<myo::Vector3<float>>    matrix_mul_vectors(std::vector<std::vector<float>> m, std::vector<myo::Vector3<float>> a){
+        std::vector<myo::Vector3<float>> ret(m.size());
+        for(int i = 0 ; i < m.size() ; i++){
+            ret[0] = myo::Vector3<float>(0,0,0);
+            for(int j = 0 ; j<m[i].size() ; j++){
+                ret[0] = myo::Vector3<float>( ret[0].x() + m[i][j] * a[j].x(), ret[0].y() + m[i][j] * a[j].y(), ret[0].z() + m[i][j] * a[j].z()) ;
+            }
+        }
+        return ret;
+    }
+    
+private:
+    myo::Vector3<float> _a_pred;
+    myo::Vector3<float> _p_pred;
+    myo::Vector3<float> _p;
+    myo::Vector3<float> k;
+    myo::Vector3<float> _v_pred;
+    myo::Vector3<float> _vp_pred;
+    myo::Vector3<float> _vp;
+    myo::Vector3<float> _pos_pred;
+    myo::Vector3<float> _posp_pred;
+    myo::Vector3<float> _posp;
 };
+
 
 int main(int argc, char** argv)
 {
@@ -197,23 +330,65 @@ int main(int argc, char** argv)
         
         // We've found a Myo.
         std::cout << "Connected to a Myo armband!" << std::endl << std::endl;
+        float sampling_period = 0.02;
         
         // Next we construct an instance of our DeviceListener, so that we can register it with the Hub.
-        DataCollector collector;
+        DataCollector collector(sampling_period);
         
         // Hub::addListener() takes the address of any object whose class inherits from DeviceListener, and will cause
         // Hub::run() to send events to all registered device listeners.
         hub.addListener(&collector);
+        ofstream    myfile;
+        
+        timeval t1, t2;
+        gettimeofday(&t1,NULL);
         
         // Finally we enter our main loop.
         while (1) {
             // In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
             // In this case, we wish to update our display 20 times a second, so we run for 1000/20 milliseconds.
-            hub.run(1000/20);
+            //hub.run(1000/20);
+            hub.run(int(sampling_period*1000));
             // After processing events, we call the print() member function we defined above to print out the values we've
             // obtained from any events that have occurred.
+            
             collector.print();
+            collector.kalmanfilter(0.001, 0.1);
+            collector.kalmanfilter_velocity(0.1, 0.2);
+            collector.kalmanfilter_position(0.1, 0.2);
+            
+            myfile.open("/Users/jingweixu/Desktop/data.txt",ios::app);
+            //print to file
+            gettimeofday(&t2,NULL);
+            double timeuse = t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec)/1000000.0;
+            myfile << timeuse << '\t';
+            //myfile << difftime(current_time, start_time) << '\t';
+            myfile << collector._accel.x() << '\t';
+            myfile << collector._accel.y() << '\t';
+            myfile << collector._accel.z() << '\t';
+            myfile << collector.accel_pure.x() << '\t';
+            myfile << collector.accel_pure.y() << '\t';
+            myfile << collector.accel_pure.z() << '\t';
+            myfile << collector.accel_filter.x() << '\t';
+            myfile << collector.accel_filter.y() << '\t';
+            myfile << collector.accel_filter.z() << '\t';
+            myfile << collector.veloc_raw.x() << '\t';
+            myfile << collector.veloc_raw.y() << '\t';
+            myfile << collector.veloc_raw.z() << '\t';
+            myfile << collector.veloc_filter.x() << '\t';
+            myfile << collector.veloc_filter.y() << '\t';
+            myfile << collector.veloc_filter.z() << '\t';
+            myfile << collector.posit_raw.x() << '\t';
+            myfile << collector.posit_raw.y() << '\t';
+            myfile << collector.posit_raw.z() << '\t';
+            myfile << collector.posit_filter.x() << '\t';
+            myfile << collector.posit_filter.y() << '\t';
+            myfile << collector.posit_filter.z() << '\n';
+            
+            
+            myfile.close();
         }
+        
         
         // If a standard exception occurred, we print out its message and exit.
     } catch (const std::exception& e) {
@@ -221,7 +396,7 @@ int main(int argc, char** argv)
         std::cerr << "Press enter to continue.";
         std::cin.ignore();
         return 1;
-    
+        
     }
     
 }
