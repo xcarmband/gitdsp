@@ -1,6 +1,8 @@
 // Copyright (C) 2013-2014 Thalmic Labs Inc.
 // Distributed under the Myo SDK license agreement. See LICENSE.txt for details.
 #define _USE_MATH_DEFINES
+#define SERVICE_PORT	25000	/* hard-coded port number */
+#define BUFSIZE 2048
 #include <cmath>
 #include <iostream>
 #include <iomanip>
@@ -17,8 +19,15 @@
 // The only file that needs to be included to use the Myo C++ SDK is myo.hpp.
 #include <myo/myo.hpp>
 #include "quaternion/quaternion.c++"
+//for UDP
+#include <stdlib.h>
+//#include <stdio.h>
+#include <string.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
-using namespace std;
+//using namespace std;
 
 
 // Classes that inherit from myo::DeviceListener can be used to receive events from Myo devices. DeviceListener
@@ -169,6 +178,7 @@ public:
         
         //Predict next status
         _pos_pred = myo::Vector3<float>(0,0,0);
+        //_pos_pred = posit_filter;
         // _v_pred =veloc_filter;
         
         //Predict the covariance matrix
@@ -189,14 +199,14 @@ public:
     
     void kalmanfilter_velocity(float alpha, float gamma){
         //update raw velocity
-        //        veloc_raw = myo::Vector3<float>(veloc_raw.x() + accel_filter.x(), veloc_raw.y() + accel_filter.y(), veloc_raw.z()+ accel_filter.z());
+                veloc_raw = myo::Vector3<float>(veloc_filter.x() + accel_filter.x(), veloc_filter.y() + accel_filter.y(), veloc_filter.z()+ accel_filter.z());
         //        veloc_raw = myo::Vector3<float>(veloc_raw.x() + accel_pure.x(), veloc_raw.y() + accel_pure.y(), veloc_raw.z()+ accel_pure.z());
-        veloc_raw = myo::Vector3<float>(veloc_filter.x() + accel_pure.x(), veloc_filter.y() + accel_pure.y(), veloc_filter.z()+ accel_pure.z());
+        // veloc_raw = myo::Vector3<float>(veloc_filter.x() + accel_pure.x(), veloc_filter.y() + accel_pure.y(), veloc_filter.z()+ accel_pure.z());
         
         
         //Predict next status
         _v_pred = myo::Vector3<float>(0,0,0);
-        // _v_pred =veloc_filter;
+        //_v_pred =veloc_filter;
         
         //Predict the covariance matrix
         _vp_pred = myo::Vector3<float>(_vp.x() + alpha, _vp.y() + alpha, _vp.z() + alpha);
@@ -344,6 +354,46 @@ int main(int argc, char** argv)
         gettimeofday(&t1,NULL);
         
         // Finally we enter our main loop.
+        system("rm /Users/tibenche/Google Drive/workspace/TCXJ/gitdsp/data.txt");
+        //
+        struct sockaddr_in myaddr;	/* our address */
+        struct sockaddr_in remaddr;	/* remote address */
+        socklen_t addrlen = sizeof(remaddr);		/* length of addresses */
+        int recvlen;			/* # bytes received */
+        int fd;				/* our socket */
+        unsigned char buf[BUFSIZE];	/* receive buffer */
+        
+        
+        /* create a UDP socket */
+        
+        if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+            perror("cannot create socket\n");
+            return 0;
+        }
+        
+        /* bind the socket to any valid IP address and a specific port */
+        
+        memset((char *)&myaddr, 0, sizeof(myaddr));
+        myaddr.sin_family = AF_INET;
+        myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+        myaddr.sin_port = htons(SERVICE_PORT);
+//        bind(fd, (struct sockaddr *)&myaddr, sizeof(myaddr));
+        
+        if (bind(fd, (struct sockaddr *)&myaddr, sizeof(myaddr)) < 0) {
+            perror("bind failed");
+            return 0;
+        }
+        
+        /* now loop, receiving data and printing what we received */
+        for (;;) {
+            printf("waiting on port %d\n", SERVICE_PORT);
+            recvlen = recvfrom(fd, buf, BUFSIZE, 0, (struct sockaddr *)&remaddr, &addrlen);
+            printf("received %d bytes\n", recvlen);
+            if (recvlen > 0) {
+                buf[recvlen] = 0;
+                printf("received message: \"%s\"\n", buf);
+            }
+        }
         while (1) {
             // In each iteration of our main loop, we run the Myo event loop for a set number of milliseconds.
             // In this case, we wish to update our display 20 times a second, so we run for 1000/20 milliseconds.
@@ -357,7 +407,8 @@ int main(int argc, char** argv)
             collector.kalmanfilter_velocity(0.1, 0.2);
             collector.kalmanfilter_position(0.1, 0.2);
             
-            myfile.open("/Users/jingweixu/Desktop/data.txt",ios::app);
+            
+            myfile.open("/Users/tibenche/Google Drive/workspace/TCXJ/gitdsp/data.txt",ios::app);
             //print to file
             gettimeofday(&t2,NULL);
             double timeuse = t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec)/1000000.0;

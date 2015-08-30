@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2148EC881B90B1CA00A6A71B /* quaternion.c++ in Sources */ = {isa = PBXBuildFile; fileRef = 2148EC871B90B1CA00A6A71B /* quaternion.c++ */; };
 		F8E852CC1B79378D007ABF99 /* myo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E852CB1B79378D007ABF99 /* myo.framework */; };
 		F8E852CD1B7937B4007ABF99 /* myo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F8E852CB1B79378D007ABF99 /* myo.framework */; };
 		F8E852CF1B793877007ABF99 /* hello-myo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F8E852CE1B793877007ABF99 /* hello-myo.cpp */; };
@@ -26,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2148EC851B90B17300A6A71B /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quaternion.h; sourceTree = "<group>"; };
+		2148EC871B90B1CA00A6A71B /* quaternion.c++ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "quaternion.c++"; sourceTree = "<group>"; };
 		F8E852C11B79373B007ABF99 /* gitdsp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gitdsp; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E852CB1B79378D007ABF99 /* myo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = myo.framework; path = sdk/myo.framework; sourceTree = "<group>"; };
 		F8E852CE1B793877007ABF99 /* hello-myo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hello-myo.cpp"; sourceTree = SOURCE_ROOT; };
@@ -43,6 +46,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2148EC831B90B17300A6A71B /* quaternion */ = {
+			isa = PBXGroup;
+			children = (
+				2148EC871B90B1CA00A6A71B /* quaternion.c++ */,
+				2148EC851B90B17300A6A71B /* quaternion.h */,
+			);
+			path = quaternion;
+			sourceTree = SOURCE_ROOT;
+		};
 		F8E852B81B79373B007ABF99 = {
 			isa = PBXGroup;
 			children = (
@@ -64,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				F8E852CE1B793877007ABF99 /* hello-myo.cpp */,
+				2148EC831B90B17300A6A71B /* quaternion */,
 			);
 			path = gitdsp;
 			sourceTree = "<group>";
@@ -125,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8E852CF1B793877007ABF99 /* hello-myo.cpp in Sources */,
+				2148EC881B90B1CA00A6A71B /* quaternion.c++ in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +265,7 @@
 				F8E852CA1B79373B007ABF99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

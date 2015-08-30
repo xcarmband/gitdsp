@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>4051EA2A-5135-42C7-B5BE-5063B98A574E</string>
 	<key>IDESourceControlProjectName</key>
-	<string>gitdsp</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>2E9EF9404DFB56024E3DCCF033DED74482BBC215</key>
 		<string>https://github.com/xcarmband/gitdsp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>gitdsp.xcodeproj</string>
+	<string>gitdsp.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>2E9EF9404DFB56024E3DCCF033DED74482BBC215</key>
